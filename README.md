@@ -12,6 +12,6 @@ link: _https://drive.google.com/drive/folders/1yjUw3Nej3-TyFsOwPg2XRbIsTkz2UOUK?
 
 
 # Ejemplo de resultado obtenido
-![Prediction_MS_095_best_model](Prediction_MS_095_best_model.PNG)
-![Prediction_MS_021](Prediction_MS_021.PNG)
-![Prediction_MS_020](Prediction_MS_020.PNG)
+![Prediction_MS_095_best_model](Prediction_MS_095_best_model.png)
+![Prediction_MS_021](Prediction_MS_021.png)
+![Prediction_MS_020](Prediction_MS_020.png)
