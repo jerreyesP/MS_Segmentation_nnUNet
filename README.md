@@ -1,5 +1,5 @@
 # MS_Segmentation_nnUNet
-Código utilizado para implementar nnUNet en el proyecto de fin de master de Jover Erreyes Pilozo 
+Código utilizado para implementar nnUNet en el proyecto de fin de master de Jover Erreyes Pilozo. Todo el proceso se ha llevado a cabo en Pycharm, creando un entorno virtual mediante pipenv. Se ha utilizado un dispositivo con una GPU RTX3050 de 8GB, 16GB de RAM, un procesador 11th Gen Intel(R) Core(TM) i5-11300H @ 3.10GHz 3.11 GHz en el sistema operativo Windows 11
 
 # Codigo completo
 link: _https://drive.google.com/drive/folders/1yjUw3Nej3-TyFsOwPg2XRbIsTkz2UOUK?usp=share_link_
