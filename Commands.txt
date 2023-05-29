@@ -1,0 +1,101 @@
+-----------------------------------------
+-------------- Install nnUNet -----------
+
+1. git clone https://github.com/MIC-DKFZ/nnUNet.git
+2. cd nnUNet
+3. pip install -e .
+
+-----------------------------------------
+----------- Environment Variables --------
+$env:nnUNet_raw = "C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\nnUNet_raw_data_base\nnUNet_raw_data"
+echo $env:nnUNet_raw
+
+$env:nnUNet_preprocessed = "C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\nnUNet_preprocessed"
+echo $env:nnUNet_preprocessed
+
+$env:nnUNet_trained_models = "C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\nnUNet_trained_models"
+echo $env:nnUNet_trained_models
+
+$env:nnUNet_results = "C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\results"
+echo $env:nnUNet_results
+
+
+-------------------------------------
+--------------Preprocess-------------
+
+nnUNetv2_plan_and_preprocess -d 500 --verify_dataset_integrity
+
+-------------------------------------
+--------------Training---------------
+
+1. Cambiar epocas -> self.num_epochs
+C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\nnUNet\nnunetv2\training\nnUNetTrainer\nnUNetTrainer.py
+
+----------------
+# self.UNet_base_num_features -> nnUNet/nnunetv2/experiment_planning/experiment_planners/default_experiment_planner.py
+# ### checkpoint saving stuff
+# self.save_every = 1  # 50
+# batch_size_per_GPU = 2  # np.ceil(global_batch_size / world_size).astype(int)
+#       self.num_iterations_per_epoch = 100  # 250
+#       self.num_val_iterations_per_epoch = 25  # 50
+#       self.num_epochs = 100
+
+nnUNetv2_train Dataset500_MS_Lesions 2d 0
+nnUNetv2_train Dataset500_MS_Lesions 2d 1
+nnUNetv2_train Dataset500_MS_Lesions 2d 2
+nnUNetv2_train Dataset500_MS_Lesions 2d 3
+nnUNetv2_train Dataset500_MS_Lesions 2d 4
+nnUNetv2_train Dataset500_MS_Lesions 2d 5
+
+
+nnUNetv2_train Dataset500_MS_Lesions 3d_fullres 0
+nnUNetv2_train Dataset500_MS_Lesions 3d_fullres 1
+nnUNetv2_train Dataset500_MS_Lesions 3d_fullres 2
+nnUNetv2_train Dataset500_MS_Lesions 3d_fullres 3
+nnUNetv2_train Dataset500_MS_Lesions 3d_fullres 4
+nnUNetv2_train Dataset500_MS_Lesions 3d_fullres 5
+
+-----------------------------------------------------
+---------- Training -> Validation -------------------
+nnUNetv2_train Dataset500_MS_Lesions 2d 0 --val --npz
+nnUNetv2_train Dataset500_MS_Lesions 2d 1 --val --npz
+nnUNetv2_train Dataset500_MS_Lesions 2d 2 --val --npz
+nnUNetv2_train Dataset500_MS_Lesions 2d 3 --val --npz
+nnUNetv2_train Dataset500_MS_Lesions 2d 4 --val --npz
+nnUNetv2_train Dataset500_MS_Lesions 2d 5 --val --npz
+
+
+nnUNetv2_train Dataset500_MS_Lesions 3d_fullres 0 --val --npz
+nnUNetv2_train Dataset500_MS_Lesions 3d_fullres 1 --val --npz
+nnUNetv2_train Dataset500_MS_Lesions 3d_fullres 2 --val --npz
+nnUNetv2_train Dataset500_MS_Lesions 3d_fullres 3 --val --npz
+nnUNetv2_train Dataset500_MS_Lesions 3d_fullres 4 --val --npz
+nnUNetv2_train Dataset500_MS_Lesions 3d_fullres 5 --val --npz
+
+
+
+---------------------------------------
+--------------Prediction---------------
+
+$env:prediction_data = "C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\prediction_test\data_for_prediction"
+$env:results_prediction_2d = "C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\prediction_test\results_prediction_2d"
+$env:results_prediction_3d = "C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\prediction_test\results_prediction_3d"
+$env:images_nnUNet = "C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\nnUNet_raw_data_base\nnUNet_raw_data\Dataset500_MS_Lesions\imagesTr"
+
+# nnUNetv2_find_best_configuration
+
+nnUNetv2_find_best_configuration Dataset500_MS_Lesions
+nnUNetv2_find_best_configuration Dataset500_MS_Lesions -c 2d
+
+nnUNetv2_predict -d Dataset500_MS_Lesions -i INPUT_FOLDER -o OUTPUT_FOLDER -f  0 1 2 3 4 -tr nnUNetTrainer -c 2d -p nnUNetPlans
+nnUNetv2_predict -d Dataset500_MS_Lesions -i $env:images_nnUNet -o $env:results_prediction_2d -f  0 1 2 3 4 -tr nnUNetTrainer -c 2d -p nnUNetPlans
+
+---------------------------------------
+-------INFERENCE----------
+
+$env:Post_processing_results = "C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\Post_processing_results"
+
+nnUNetv2_apply_postprocessing -i FOLDER_WITH_PREDICTIONS -o OUTPUT_FOLDER --pp_pkl_file POSTPROCESSING_FILE -plans_json PLANS_FILE -dataset_json DATASET_JSON_FILE
+
+nnUNetv2_apply_postprocessing -i $env:results_prediction_2d -o $env:Post_processing_results -pp_pkl_file C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\results\Dataset500_MS_Lesions\nnUNetTrainer__nnUNetPlans__2d\crossval_results_folds_0_1_2_3_4\postprocessing.pkl -np 8 -plans_json C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\results\Dataset500_MS_Lesions\nnUNetTrainer__nnUNetPlans__2d\crossval_results_folds_0_1_2_3_4\plans.json
+nnUNetv2_apply_postprocessing -i $env:results_prediction_2d -o $env:Post_processing_results -pp_pkl_file C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\results\Dataset500_MS_Lesions\nnUNetTrainer__nnUNetPlans__2d\crossval_results_folds_0_1_2_3_4\postprocessing.pkl -np 8 -plans_json C:\Users\Willy\Documents\PythonProjects\MS_nnUNet\results\Dataset500_MS_Lesions\nnUNetTrainer__nnUNetPlans__2d\crossval_results_folds_0_1_2_3_4\plans.json
