@@ -19,6 +19,6 @@ link: _https://drive.google.com/drive/folders/1yjUw3Nej3-TyFsOwPg2XRbIsTkz2UOUK?
 A partir de main.py se descomprimen los archivos de imagenes, se crea la estructura de carpetas necesarias para nnUNet, se copiar y renombran los archivos y se colocan en las carpetas correspondientes, se crea un json con los metadatos para cada grupo de imagenes y su respectivo label, con esta información se crean el json y ya es posible iniciar el proceso de preprocesado con el comando adecuado que se encuentra en 'commands.txt'. De la misma manera es necesario establecer previamente las diversas variables de entorno para poder ejecutar los diversos comandos.
 
 # Ejemplo de resultado obtenido
-![Prediction_MS_095_best_model](Prediction_MS_095_best_model.png)
+![Prediction_MS_095](Prediction_MS_095.png)
 ![Prediction_MS_021](Prediction_MS_021.png)
-![Prediction_MS_020](Prediction_MS_020.png)
+![Prediction_MS_039](Prediction_MS_039.png)
